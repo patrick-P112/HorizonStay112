@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HorizonTravil — Sign In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1B2B5E;
+      --amber: #F5A623;
+      --amber-dark: #D98F1A;
+      --white: #fff;
+      --muted: #6B7280;
+      --bg: #F7F5F0;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    /* LEFT PANEL */
+    .panel-left {
+      position: relative;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 52px;
+      overflow: hidden;
+      color: #fff;
+    }
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=80') center/cover no-repeat;
+      opacity: 0.25;
+    }
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(27,43,94,0.7) 0%, rgba(27,43,94,0.95) 100%);
+    }
+    .panel-left > * { position: relative; z-index: 1; }
+
+    .brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand-logo span { color: var(--amber); }
+
+    .panel-quote {
+      margin-top: auto;
+    }
+    .panel-quote h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      line-height: 1.25;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .panel-quote p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      max-width: 360px;
+    }
+    .panel-stats {
+      display: flex;
+      gap: 36px;
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--amber);
+    }
+    .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+    /* RIGHT PANEL */
+    .panel-right {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 64px;
+    }
+    .form-box { width: 100%; max-width: 360px; }
+    .form-box h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .form-box .sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid #DDD9D0;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.93rem;
+      background: #fff;
+      color: var(--navy);
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.15);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+    .btn-primary:hover { background: #14215a; transform: translateY(-1px); }
+    .divider { text-align: center; color: var(--muted); font-size: 0.82rem; margin: 22px 0; position: relative; }
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%; width: 42%; height: 1px;
+      background: #DDD9D0;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+    .link-row { text-align: center; font-size: 0.85rem; color: var(--muted); margin-top: 24px; }
+    .link-row a { color: var(--navy); font-weight: 600; text-decoration: none; }
+    .link-row a:hover { color: var(--amber); }
+    .error-msg { display: none; color: #e53e3e; font-size: 0.82rem; margin-top: 6px; }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 40px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LEFT: Brand Visual -->
+<div class="panel-left">
+  <a href="login.html" class="brand-logo">Horizon<span>Travil</span></a>
+  <div class="panel-quote">
+    <h2>Your next adventure<br>starts here.</h2>
+    <p>Access thousands of flights, hand-picked hotels and unforgettable travel packages — all in one place.</p>
+    <div class="panel-stats">
+      <div class="stat-item">
+        <div class="stat-num">500K+</div>
+        <div class="stat-label">Flights available</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">120+</div>
+        <div class="stat-label">Countries covered</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Traveler rating</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT: Login Form -->
+<div class="panel-right">
+  <div class="form-box">
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to your HorizonTravil account</p>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter your username" autocomplete="username">
+      <div class="error-msg" id="err-user">Please enter your username.</div>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      <div class="error-msg" id="err-pass">Please enter your password.</div>
+    </div>
+
+    <button class="btn-primary" onclick="handleLogin()">Continue →</button>
+  </form>
+
+    <div class="divider">or</div>
+
+    <div class="link-row">
+      Don't have an account? <a href="register.html">Create one</a>
+    </div>
+    <div class="link-row" style="margin-top:10px;">
+      <a href="forgot-password.html">Forgot password?</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function handleLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
+    const eu = document.getElementById('err-user');
+    const ep = document.getElementById('err-pass');
+    eu.style.display = 'none';
+    ep.style.display = 'none';
+    let valid = true;
+    if (!u) { eu.style.display = 'block'; valid = false; }
+    if (!p) { ep.style.display = 'block'; valid = false; }
+    if (valid) window.location.href ="hotels.html";
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
+</body>
+</html>

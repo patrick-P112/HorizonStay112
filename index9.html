@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HorizonTravel — Flights</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1B2B5E;
+      --amber: #F5A623;
+      --amber-dark: #D98F1A;
+      --green: #3DBD72;
+      --bg: #f4f6fa;
+      --white: #ffffff;
+      --text: #1e2a3e;
+      --muted: #6B7280;
+      --border: #e2e8f0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: var(--white);
+      padding: 0 52px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+    }
+    .logo span { color: var(--amber); }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: all 0.18s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--navy); background: rgba(27,43,94,0.06); }
+    .nav-links a.active { font-weight: 600; }
+    .btn-ghost { padding: 8px 18px; border: 1.5px solid var(--border); border-radius: 8px; background: transparent; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--navy); cursor: pointer; text-decoration: none; transition: all 0.18s; }
+    .btn-ghost:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(105deg, #ffffff 0%, #fef9e6 100%);
+      padding: 60px 52px 44px;
+      border-bottom: 1px solid #ffe4bb;
+    }
+    .hero-grid { display: flex; flex-wrap: wrap; align-items: center; gap: 40px; }
+    .hero-text { flex: 1; }
+    .hero-text h1 { font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 16px; color: var(--navy); }
+    .hero-text p { font-size: 1rem; color: var(--muted); max-width: 480px; margin-bottom: 0; line-height: 1.7; }
+    .hero-badge { background: #eef2ff; display: inline-block; padding: 6px 16px; border-radius: 40px; font-size: 0.82rem; font-weight: 600; color: #1e4a76; margin-bottom: 18px; }
+    .hero-image { flex: 1; text-align: center; }
+    .hero-image img { max-width: 100%; border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); }
+
+    /* SEARCH */
+    .search-section { margin-top: -24px; position: relative; z-index: 10; padding: 0 52px; }
+    .booking-card { background: var(--white); border-radius: 24px; box-shadow: 0 16px 40px rgba(0,0,0,0.1); padding: 28px; }
+    .form-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+    .input-group { flex: 1; min-width: 140px; }
+    .input-group label { display: block; font-weight: 600; margin-bottom: 7px; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .input-group input, .input-group select { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.9rem; background: #fafaf6; color: var(--text); transition: 0.18s; -webkit-appearance: none; appearance: none; }
+    .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--navy); background: #fff; box-shadow: 0 0 0 3px rgba(27,43,94,0.1); }
+    .search-btn { background: var(--amber); border: none; padding: 12px 24px; border-radius: 100px; font-weight: 700; color: white; font-size: 0.95rem; cursor: pointer; transition: 0.18s; font-family: 'Inter', sans-serif; box-shadow: 0 4px 16px rgba(245,166,35,0.35); white-space: nowrap; }
+    .search-btn:hover { background: var(--amber-dark); transform: translateY(-1px); }
+
+    /* RESULTS */
+    .results-section { padding: 52px; }
+    .sec-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+    .section-title { font-size: 1.7rem; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
+    .section-sub { color: var(--muted); font-size: 0.88rem; }
+
+    .flights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+    .flight-card { background: var(--white); border-radius: 20px; overflow: hidden; transition: all 0.25s ease; box-shadow: 0 6px 24px rgba(0,0,0,0.07); cursor: pointer; border: 1px solid var(--border); }
+    .flight-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+    .flight-img { height: 210px; background-size: cover; background-position: center; position: relative; }
+    .flight-badge { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 11px; border-radius: 100px; color: #fff; font-weight: 600; font-size: 0.78rem; }
+    .flight-info { padding: 20px 18px 22px; }
+    .flight-name { font-size: 1.1rem; font-weight: 700; display: flex; justify-content: space-between; color: var(--navy); }
+    .flight-price { color: var(--amber); font-weight: 800; }
+    .flight-location { color: var(--muted); font-size: 0.82rem; margin: 5px 0 11px; }
+    .rating { background: rgba(61,189,114,0.12); color: #2a9659; border-radius: 6px; padding: 3px 9px; font-size: 0.76rem; font-weight: 600; display: inline-block; margin-bottom: 14px; }
+    .book-now-btn { background: transparent; border: 1.5px solid var(--amber); padding: 10px 0; width: 100%; border-radius: 9px; font-weight: 700; color: var(--amber); transition: 0.18s; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.88rem; }
+    .book-now-btn:hover { background: var(--amber); color: white; }
+
+    /* FEATURES */
+    .features { background: var(--navy); padding: 52px; margin: 0 52px 52px; border-radius: 20px; }
+    .features h3 { font-size: 1.5rem; color: #fff; margin-bottom: 32px; text-align: center; font-weight: 700; }
+    .features-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+    .feature { flex: 1; min-width: 160px; text-align: center; color: rgba(255,255,255,0.85); }
+    .feature-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .feature h4 { font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .feature p { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+
+    /* FOOTER */
+    footer { background: #0f1f3a; color: rgba(255,255,255,0.6); padding: 32px 52px; text-align: center; font-size: 0.85rem; }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; margin: 0 10px; transition: color 0.18s; }
+    footer a:hover { color: var(--amber); }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--white); max-width: 460px; width: 90%; border-radius: 24px; padding: 36px; text-align: center; animation: fadeUp 0.2s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-content span.modal-icon { font-size: 2.8rem; }
+    .modal-content h3 { font-size: 1.5rem; margin: 12px 0 8px; color: var(--navy); font-weight: 700; }
+    .modal-content p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .modal-confirm { background: var(--navy); border: none; padding: 12px 24px; border-radius: 100px; font-weight: 700; color: white; margin-top: 20px; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.18s; }
+    .modal-confirm:hover { background: #14215a; }
+    .close-modal { background: #F0EDEA; border: none; padding: 10px 20px; border-radius: 100px; margin-left: 10px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600; color: var(--navy); }
+
+    @media (max-width: 768px) {
+      nav, .hero, .search-section, .results-section, .features, footer { padding-left: 20px; padding-right: 20px; }
+      .features { margin: 0 20px 40px; }
+      .hero-image { display: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="home.html" class="logo">Horizon<span>Travel</span></a>
+  <div class="nav-links">
+    <a href="hotels.html">Hotels</a>
+    <a href="index9.html" class="active">Flights</a>
+  </div>
+  <a href="hotels.html" class="btn-ghost">← Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="hero-badge">✈️ Book now, fly later</div>
+      <h1>Fly anywhere,<br>reach the world.</h1>
+      <p>Unlock exclusive deals on 500K+ flights worldwide. Instant confirmation &amp; best price guarantee.</p>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=900&q=80" alt="Airplane in the sky">
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="booking-card">
+    <div class="form-row">
+      <div class="input-group">
+        <label>From</label>
+        <input type="text" id="origin" placeholder="Departure city or airport">
+      </div>
+      <div class="input-group">
+        <label>To</label>
+        <input type="text" id="destination" placeholder="Destination city or airport">
+      </div>
+      <div class="input-group">
+        <label>Departure</label>
+        <input type="date" id="checkin">
+      </div>
+      <div class="input-group">
+        <label>Return</label>
+        <input type="date" id="checkout">
+      </div>
+      <div class="input-group">
+        <label>Passengers</label>
+        <select id="guests">
+          <option>1 Passenger</option>
+          <option>2 Passengers</option>
+          <option>3 Passengers</option>
+          <option>4 Passengers</option>
+        </select>
+      </div>
+      <button type="button" class="search-btn" onclick="performSearch()">Search Flights</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<section class="results-section">
+  <div class="sec-header-row">
+    <div>
+      <div class="section-title">Popular Flight Routes</div>
+      <div class="section-sub" id="resultSubtitle">Discover top-rated flights matching your travel plans</div>
+    </div>
+  </div>
+  <div class="flights-grid" id="flightsContainer"></div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 HorizonTravel — Your gateway to the world.</p>
+  <div style="margin-top:12px;">
+    <a href="about9.html">About</a>
+    <a href="hotels.html">Hotels</a>
+    <a href="index9.html">Flights</a>
+  </div>
+  <p style="margin-top:8px;font-size:0.78rem;color:rgba(255,255,255,0.35);">Unforgettable journeys, effortless booking</p>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div id="bookingModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-icon">✈️</span>
+    <h3 id="modalFlightName">Flight Route</h3>
+    <p id="modalMessage">Confirm your flight booking?</p>
+    <div style="margin-top:20px;">
+      <button class="modal-confirm" id="confirmBooking">Yes, book now</button>
+      <button class="close-modal" id="closeModalBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+  /* array*/
+  const flightsDatabase = [
+    { id:1, name:"Cairo → Paris", location:"🇪🇬 Egypt → 🇫🇷 France", pricePerTicket:420, rating:4.8,
+      airline:"Direct Flight", imageUrl:"https://th.bing.com/th/id/OIP.r2YapugoMKhJVznnLG1dQAHaC9?w=276&h=140&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["cairo","paris","egypt","france"] },
+    { id:2, name:"Dubai → Tokyo", location:"🇦🇪 UAE → 🇯🇵 Japan", pricePerTicket:680, rating:4.9,
+      airline:"1 Stop", imageUrl:"https://th.bing.com/th/id/OIP.F9HWVI4X7gGSzVImtM0mzAHaE0?w=280&h=182&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["dubai","tokyo","uae","japan"] },
+    { id:3, name:"Cairo → New York", location:"🇪🇬 Egypt → 🇺🇸 USA", pricePerTicket:750, rating:4.7,
+      airline:"1 Stop", imageUrl:"https://th.bing.com/th/id/OIP.NrfSHI91Sv4eiS4a9r7mzAHaFj?w=276&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["cairo","new york","egypt","usa"] },
+    { id:4, name:"Dubai → Paris", location:"🇦🇪 UAE → 🇫🇷 France", pricePerTicket:390, rating:4.6,
+      airline:"Direct Flight", imageUrl:"https://th.bing.com/th/id/OIP.r2YapugoMKhJVznnLG1dQAHaC9?w=276&h=140&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["dubai","paris","uae","france"] },
+    { id:5, name:"Tokyo → New York", location:"🇯🇵 Japan → 🇺🇸 USA", pricePerTicket:870, rating:4.8,
+      airline:"1 Stop", imageUrl:"https://th.bing.com/th/id/OIP.NrfSHI91Sv4eiS4a9r7mzAHaFj?w=276&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["tokyo","new york","japan","usa"] },
+    { id:6, name:"Paris → Dubai", location:"🇫🇷 France → 🇦🇪 UAE", pricePerTicket:380, rating:4.7,
+      airline:"Direct Flight", imageUrl:"https://th.bing.com/th/id/OIP.2WPpDvjn47sfrZu-ZQF91wHaEK?w=300&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      keywords:["paris","dubai","france","uae"]}
+  ];
+
+  let selectedFlight = null;
+/* serch*/
+  function filterFlights(from, to) {
+    if (!from && !to) return [...flightsDatabase];
+    const qFrom = (from || '').trim().toLowerCase();
+    const qTo = (to || '').trim().toLowerCase();
+    return flightsDatabase.filter(f => {
+      const nameLC = f.name.toLowerCase();
+      const locLC = f.location.toLowerCase();
+      const matchFrom = !qFrom || f.keywords.some(k => k.includes(qFrom)) || nameLC.includes(qFrom) || locLC.includes(qFrom);
+      const matchTo = !qTo || f.keywords.some(k => k.includes(qTo)) || nameLC.includes(qTo) || locLC.includes(qTo);
+      return matchFrom && matchTo;
+    });
+  }
+
+  function renderFlights(flights, searchTerm) {
+    const container = document.getElementById('flightsContainer');
+    const subtitle = document.getElementById('resultSubtitle');
+
+    if (!flights.length) {
+      container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
+        No flights found for "${searchTerm}". Try different cities.</div>`;
+      subtitle.innerText = `No exact matches for "${searchTerm}"`;
+      return;
+    }
+
+    subtitle.innerText = searchTerm
+      ? `✈️ ${flights.length} flight${flights.length > 1 ? 's' : ''} found for "${searchTerm}"`
+      : 'Discover top-rated flights matching your travel plans';
+
+    container.innerHTML = flights.map(f => `
+      <div class="flight-card">
+        <div class="flight-img" style="background-image: url('${f.imageUrl}')">
+          <span class="flight-badge">${f.airline}</span>
+        </div>
+        <div class="flight-info">
+          <div class="flight-name">
+            <span>${f.name}</span>
+            <span class="flight-price">$${f.pricePerTicket}</span>
+          </div>
+          <div class="flight-location">✈️ ${f.location}</div>
+          <span class="rating">⭐ ${f.rating} / 5.0</span>
+          <button class="book-now-btn" data-id="${f.id}">Book Flight →</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.book-now-btn').forEach(btn => {
+      btn.addEventListener('click', () => openModal(parseInt(btn.getAttribute('data-id'))));
+    });
+  }
+
+  function performSearch() {
+    const from = document.getElementById('origin').value.trim();
+    const to = document.getElementById('destination').value.trim();
+    const term = [from, to].filter(Boolean).join(' → ');
+    renderFlights(filterFlights(from, to), term);
+  }
+
+  // Allow Enter key
+  ['origin','destination'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') performSearch();
+    });
+  });
+
+  function openModal(flightId) {
+    selectedFlight = flightsDatabase.find(f => f.id === flightId);
+    document.getElementById('modalFlightName').textContent = selectedFlight.name;
+    document.getElementById('modalMessage').textContent =
+      `Book your flight ${selectedFlight.name} for $${selectedFlight.pricePerTicket}/person? We'll send details to your email.`;
+    document.getElementById('bookingModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+
+  window.addEventListener('click', e => {
+    if (e.target === document.getElementById('bookingModal')) closeModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  document.getElementById('confirmBooking').addEventListener('click', () => {
+    closeModal();
+    if (selectedFlight) {
+      alert(`✈️ Flight booked successfully!\n\nYour booking for ${selectedFlight.name} has been confirmed.\n💰 $${selectedFlight.pricePerTicket}/person\n\n✉️ A confirmation email has been sent.`);
+    }
+  });
+
+  function closeModal() {
+    document.getElementById('bookingModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Init dates
+  const today = new Date();
+  const fmt = d => d.toISOString().split('T')[0];
+  const t1 = new Date(today); t1.setDate(today.getDate() + 1);
+  const t2 = new Date(today); t2.setDate(today.getDate() + 7);
+  document.getElementById('checkin').value = fmt(t1);
+  document.getElementById('checkout').value = fmt(t2);
+  document.querySelectorAll('input[type="date"]').forEach(i => i.min = fmt(today));
+
+  // Read dest param from URL (passed from home search)
+  const params = new URLSearchParams(window.location.search);
+  const urlDest = params.get('dest') || '';
+  if (urlDest) document.getElementById('destination').value = urlDest;
+  renderFlights(filterFlights('', urlDest), urlDest);
+</script>
+</body>
+</html>

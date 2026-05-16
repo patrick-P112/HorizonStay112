@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HorizonTravil — Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1B2B5E;
+      --amber: #F5A623;
+      --amber-dark: #D98F1A;
+      --white: #fff;
+      --muted: #6B7280;
+      --bg: #F7F5F0;
+      --border: #DDD9D0;
+      --error: #e53e3e;
+      --success: #38a169;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── LEFT PANEL ── */
+    .panel-left {
+      position: relative;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 52px;
+      overflow: hidden;
+      color: #fff;
+    }
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80') center/cover no-repeat;
+      opacity: 0.22;
+    }
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(27,43,94,0.65) 0%, rgba(27,43,94,0.96) 100%);
+    }
+    .panel-left > * { position: relative; z-index: 1; }
+
+    .brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+    .brand-logo span { color: var(--amber); }
+
+    .panel-quote { margin-top: auto; }
+    .panel-quote h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.25;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .panel-quote p {
+      font-size: 0.93rem;
+      color: rgba(255,255,255,0.62);
+      line-height: 1.75;
+      max-width: 360px;
+    }
+
+    .perks {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.14);
+    }
+    .perk {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+    }
+    .perk-icon {
+      width: 32px; height: 32px;
+      background: rgba(245,166,35,0.18);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .panel-right {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 52px 64px;
+      overflow-y: auto;
+    }
+    .form-box { width: 100%; max-width: 380px; }
+
+    .form-box h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-box .sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--navy);
+      margin-bottom: 7px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      background: #fff;
+      color: var(--navy);
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none; appearance: none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(245,166,35,0.14);
+    }
+    .form-group input.valid { border-color: var(--success); }
+    .form-group input.invalid { border-color: var(--error); }
+
+    /* password strength */
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1rem;
+      user-select: none;
+      color: var(--muted);
+    }
+    .strength-bar { display: flex; gap: 4px; margin-top: 8px; }
+    .strength-seg {
+      height: 3px; flex: 1; border-radius: 4px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .strength-label { font-size: 0.75rem; color: var(--muted); margin-top: 5px; }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 4px 0 20px;
+      line-height: 1.5;
+    }
+    .terms input[type="checkbox"] { margin-top: 2px; accent-color: var(--navy); flex-shrink: 0; }
+    .terms a { color: var(--navy); font-weight: 600; text-decoration: none; }
+    .terms a:hover { color: var(--amber); }
+
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #14215a; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .link-row { text-align: center; font-size: 0.84rem; color: var(--muted); margin-top: 22px; }
+    .link-row a { color: var(--navy); font-weight: 600; text-decoration: none; }
+    .link-row a:hover { color: var(--amber); }
+
+    .error-msg { display: none; color: var(--error); font-size: 0.78rem; margin-top: 5px; }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-screen {
+      display: none;
+      text-align: center;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: rgba(56,161,105,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+    }
+    .success-screen h2 { font-family: 'Playfair Display', serif; font-size: 1.7rem; color: var(--navy); margin-bottom: 10px; }
+    .success-screen p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+    .btn-success {
+      display: inline-block;
+      padding: 13px 32px;
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-success:hover { background: #14215a; }
+
+    @media (max-width: 768px) {
+      body { grid-template-columns: 1fr; }
+      .panel-left { display: none; }
+      .panel-right { padding: 40px 24px; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LEFT: Brand Visual -->
+<div class="panel-left">
+  <a href="login.html" class="brand-logo">Horizon<span>Travil</span></a>
+  <div class="panel-quote">
+    <h2>Join millions of<br>happy travelers.</h2>
+    <p>Create your free account and unlock exclusive deals, personalized recommendations, and 24/7 travel support.</p>
+    <div class="perks">
+      <div class="perk"><div class="perk-icon">✈️</div>Access 500K+ flights worldwide</div>
+      <div class="perk"><div class="perk-icon">🏨</div>Exclusive hotel rates, members only</div>
+      <div class="perk"><div class="perk-icon">💎</div>Best price guarantee on every booking</div>
+      <div class="perk"><div class="perk-icon">🌟</div>24/7 dedicated travel support</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT: Register Form -->
+<div class="panel-right">
+  <!-- FORM -->
+  <div class="form-box" id="formBox">
+    <h1>Create account</h1>
+    <p class="sub">Start your journey with HorizonTravil — it's free.</p>
+
+    <div class="form-row-2">
+      <div class="form-group">
+        <label>First name</label>
+        <input type="text" id="firstName" placeholder="John" autocomplete="given-name">
+        <div class="error-msg" id="err-first">Required.</div>
+      </div>
+      <div class="form-group">
+        <label>Last name</label>
+        <input type="text" id="lastName" placeholder="Doe" autocomplete="family-name">
+        <div class="error-msg" id="err-last">Required.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email address</label>
+      <input type="email" id="email" placeholder="john@example.com" autocomplete="email">
+      <div class="error-msg" id="err-email">Enter a valid email address.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Choose a username" autocomplete="username">
+      <div class="error-msg" id="err-username">At least 3 characters required.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password" oninput="checkStrength()">
+        <span class="pw-toggle" onclick="togglePw('password', this)">👁️</span>
+      </div>
+      <div class="strength-bar">
+        <div class="strength-seg" id="s1"></div>
+        <div class="strength-seg" id="s2"></div>
+        <div class="strength-seg" id="s3"></div>
+        <div class="strength-seg" id="s4"></div>
+      </div>
+      <div class="strength-label" id="strengthLabel"></div>
+      <div class="error-msg" id="err-pw">Password must be at least 8 characters.</div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm password</label>
+      <div class="pw-wrap">
+        <input type="password" id="confirmPw" placeholder="Repeat your password" autocomplete="new-password">
+        <span class="pw-toggle" onclick="togglePw('confirmPw', this)">👁️</span>
+      </div>
+      <div class="error-msg" id="err-confirm">Passwords do not match.</div>
+    </div>
+
+    <div class="terms">
+      <input type="checkbox" id="terms">
+      <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+    </div>
+    <div class="error-msg" id="err-terms" style="margin-bottom:14px;">You must accept the terms to continue.</div>
+
+    <button class="btn-primary" onclick="handleRegister()">Create my account →</button>
+
+    <div class="link-row">
+      Already have an account? <a href="login.html">Sign in</a>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successBox">
+    <div class="success-icon">✅</div>
+    <h2>Account created!</h2>
+    <p>Welcome to HorizonTravil, <strong id="successName"></strong>!<br>Your account is ready. Start exploring the world.</p>
+    <a href="login.html" class="btn-success">Sign in now →</a>
+  </div>
+</div>
+
+<script>
+  function togglePw(id, el) {
+    const input = document.getElementById(id);
+    if (input.type === 'password') { input.type = 'text'; el.textContent = '🙈'; }
+    else { input.type = 'password'; el.textContent = '👁️'; }
+  }
+
+  function checkStrength() {
+    const val = document.getElementById('password').value;
+    const segs = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4')];
+    const label = document.getElementById('strengthLabel');
+    segs.forEach(s => s.style.background = 'var(--border)');
+
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const colors = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169'];
+    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+    for (let i = 0; i < score; i++) segs[i].style.background = colors[score - 1];
+    label.textContent = val.length ? labels[score - 1] || '' : '';
+    label.style.color = score ? colors[score - 1] : 'var(--muted)';
+  }
+
+  function showError(id, show) {
+    document.getElementById(id).style.display = show ? 'block' : 'none';
+  }
+
+  function handleRegister() {
+    const first = document.getElementById('firstName').value.trim();
+    const last  = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const user  = document.getElementById('username').value.trim();
+    const pw    = document.getElementById('password').value;
+    const cpw   = document.getElementById('confirmPw').value;
+    const terms = document.getElementById('terms').checked;
+
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let valid = true;
+
+    showError('err-first',    !first);        if (!first)              valid = false;
+    showError('err-last',     !last);         if (!last)               valid = false;
+    showError('err-email',    !emailRx.test(email)); if (!emailRx.test(email)) valid = false;
+    showError('err-username', user.length < 3); if (user.length < 3)  valid = false;
+    showError('err-pw',       pw.length < 8);   if (pw.length < 8)    valid = false;
+    showError('err-confirm',  pw !== cpw);       if (pw !== cpw)       valid = false;
+    showError('err-terms',    !terms);           if (!terms)           valid = false;
+
+    if (!valid) return;
+
+    // Show success
+    document.getElementById('successName').textContent = first;
+    document.getElementById('formBox').style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') handleRegister(); });
+</script>
+</body>
+</html>

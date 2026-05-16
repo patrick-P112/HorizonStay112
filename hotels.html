@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HorizonTravel — Hotels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #1B2B5E;
+      --amber: #F5A623;
+      --amber-dark: #D98F1A;
+      --green: #3DBD72;
+      --bg: #F7F5F0;
+      --white: #fff;
+      --text: #1A1A2E;
+      --muted: #6B7280;
+      --border: #E5E0D8;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
+
+    /* NAVBAR */
+    nav {
+      background: var(--white);
+      padding: 0 52px;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--navy); }
+    .logo span { color: var(--amber); }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 8px 14px; border-radius: 8px; transition: all 0.18s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--navy); background: rgba(27,43,94,0.06); }
+    .nav-links a.active { font-weight: 600; }
+    .btn-ghost { padding: 8px 18px; border: 1.5px solid var(--border); border-radius: 8px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--navy); cursor: pointer; text-decoration: none; transition: all 0.18s; }
+    .btn-ghost:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(105deg, #fff 0%, #FEF3E0 100%);
+      padding: 60px 52px 44px;
+      border-bottom: 1px solid #FFE4BB;
+    }
+    .hero-grid { display: flex; flex-wrap: wrap; align-items: center; gap: 40px; }
+    .hero-text { flex: 1; }
+    .hero-badge { background: #EEF2FF; display: inline-block; padding: 6px 16px; border-radius: 40px; font-size: 0.82rem; font-weight: 600; color: #1e4a76; margin-bottom: 18px; }
+    .hero-text h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; color: var(--navy); }
+    .hero-text p { font-size: 1rem; color: var(--muted); max-width: 480px; line-height: 1.7; }
+    .hero-image { flex: 1; text-align: center; }
+    .hero-image img { max-width: 100%; border-radius: 32px; box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); }
+
+    /* SEARCH */
+    .search-section { margin-top: -24px; position: relative; z-index: 10; padding: 0 52px; }
+    .booking-card { background: var(--white); border-radius: 24px; box-shadow: 0 16px 40px rgba(0,0,0,0.1); padding: 28px; }
+    .form-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+    .input-group { flex: 1; min-width: 140px; }
+    .input-group label { display: block; font-weight: 600; margin-bottom: 7px; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .input-group input, .input-group select { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: #FAFAF6; color: var(--text); transition: 0.18s; -webkit-appearance: none; appearance: none; }
+    .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--navy); background: #fff; }
+    .search-btn { background: var(--amber); border: none; padding: 12px 24px; border-radius: 100px; font-weight: 700; color: white; font-size: 0.95rem; cursor: pointer; transition: 0.18s; font-family: 'DM Sans', sans-serif; box-shadow: 0 4px 16px rgba(245,166,35,0.35); white-space: nowrap; }
+    .search-btn:hover { background: var(--amber-dark); transform: translateY(-1px); }
+
+    /* RESULTS */
+    .results-section { padding: 52px; }
+    .sec-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
+    .section-sub { color: var(--muted); font-size: 0.88rem; }
+    .hotels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
+    .hotel-card { background: var(--white); border-radius: 20px; overflow: hidden; transition: all 0.25s ease; box-shadow: 0 6px 24px rgba(0,0,0,0.07); cursor: pointer; border: 1px solid var(--border); }
+    .hotel-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+    .hotel-img { height: 210px; background-size: cover; background-position: center; position: relative; }
+    .hotel-badge { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 4px 11px; border-radius: 100px; color: #fff; font-weight: 600; font-size: 0.78rem; }
+    .hotel-info { padding: 20px 18px 22px; }
+    .hotel-name { font-size: 1.1rem; font-weight: 700; display: flex; justify-content: space-between; color: var(--navy); }
+    .hotel-price { color: var(--amber); font-weight: 800; }
+    .hotel-location { color: var(--muted); font-size: 0.82rem; margin: 5px 0 11px; }
+    .rating { background: rgba(61,189,114,0.12); color: #2a9659; border-radius: 6px; padding: 3px 9px; font-size: 0.76rem; font-weight: 600; display: inline-block; margin-bottom: 14px; }
+    .book-now-btn { background: transparent; border: 1.5px solid var(--amber); padding: 10px 0; width: 100%; border-radius: 9px; font-weight: 700; color: var(--amber); transition: 0.18s; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; }
+    .book-now-btn:hover { background: var(--amber); color: white; }
+
+    /* FEATURES */
+    .features { background: var(--navy); padding: 52px; margin: 0 52px 52px; border-radius: 20px; }
+    .features h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #fff; margin-bottom: 32px; text-align: center; }
+    .features-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+    .feature { flex: 1; min-width: 160px; text-align: center; color: rgba(255,255,255,0.85); }
+    .feature-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .feature h4 { font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .feature p { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+
+    /* FOOTER */
+    footer { background: #0F1F3A; color: rgba(255,255,255,0.6); padding: 32px 52px; text-align: center; font-size: 0.85rem; }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; margin: 0 10px; transition: color 0.18s; }
+    footer a:hover { color: var(--amber); }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 1000; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--white); max-width: 460px; width: 90%; border-radius: 24px; padding: 36px; text-align: center; animation: fadeUp 0.2s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-content span { font-size: 2.8rem; }
+    .modal-content h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin: 12px 0 8px; color: var(--navy); }
+    .modal-content p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .modal-confirm { background: var(--navy); border: none; padding: 12px 24px; border-radius: 100px; font-weight: 700; color: white; margin-top: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .modal-confirm:hover { background: #14215a; }
+    .close-modal { background: #F0EDEA; border: none; padding: 10px 20px; border-radius: 100px; margin-left: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--navy); }
+
+    @media (max-width: 768px) {
+      nav, .hero, .search-section, .results-section, .features { padding-left: 20px; padding-right: 20px; }
+      .features { margin: 0 20px 40px; }
+      .hero-image { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="home.html" class="logo">Horizon<span>Travel</span></a>
+  <div class="nav-links">
+    <a href="hotels.html" class="active">Hotels</a>
+    <a href="index9.html">Flights</a>
+  </div>
+   <a href="login.html" class="btn-ghost">Log out</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="hero-badge">Book now, stay better</div>
+      <h1>Stay anywhere,<br>feel at home.</h1>
+      <p>Unlock exclusive deals on 2M+ hotels worldwide. Instant confirmation &amp; best price guarantee.</p>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=900&q=80" alt="Luxury hotel">
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="booking-card">
+    <div class="form-row">
+      <div class="input-group">
+        <label>Destination</label>
+        <input type="text" id="destination" placeholder="City, hotel, or region">
+      </div>
+      <div class="input-group">
+        <label>Check-in</label>
+        <input type="date" id="checkin">
+      </div>
+      <div class="input-group">
+        <label>Check-out</label>
+        <input type="date" id="checkout">
+      </div>
+      <div class="input-group">
+        <label>Guests</label>
+        <select id="guests">
+          <option>1 Guest</option>
+          <option>2 Guests</option>
+          <option>3 Guests</option>
+          <option>4 Guests</option>
+        </select>
+      </div>
+      <button type="button" class="search-btn" onclick="performSearch()">Search Hotels</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<section class="results-section">
+  <div class="sec-header-row">
+    <div>
+      <div class="section-title">Handpicked for you</div>
+      <div class="section-sub" id="resultSubtitle">Discover top-rated stays matching your style</div>
+    </div>
+  </div>
+  <div class="hotels-grid" id="hotelsContainer"></div>
+</section>
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 HorizonTravel — Your gateway to the world.</p>
+  <div style="margin-top:12px;">
+    <a href="about (1).html">About</a>
+    <a href="hotels.html">Hotels</a>
+    <a href="index9.html">Flights</a>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div id="bookingModal" class="modal">
+  <div class="modal-content">
+    <span>🏨</span>
+    <h3 id="modalHotelName">Hotel</h3>
+    <p id="modalMessage">Confirm your reservation?</p>
+    <div style="margin-top: 8px;">
+      <button class="modal-confirm" id="confirmBooking">Yes, book now</button>
+      <button class="close-modal" id="closeModalBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const hotelsDatabase = [
+    { 
+      id:1,
+      name:"Grand Royale Paris",
+      location:"Paris, France",
+      pricePerNight:189, 
+      rating:4.8,
+      imageUrl:"https://th.bing.com/th/id/OIP.WnkkwWQkNRJ9-x5MLiIkFgHaE8?w=216&h=180&c=7&r=0&o=7&pid=1.7&rm=3",
+      cityMatch:"paris"
+   },
+    { 
+     id :2,
+     name:"The Coastal Bliss",
+     location:"Barcelona, Spain",
+     pricePerNight:142,
+     rating:4.6,
+     imageUrl:"https://th.bing.com/th?id=OIF.eqoB5ijp%2bGKiFGh%2b7Lr%2fvQ&w=309&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+     cityMatch:"barcelona" 
+    },
+    { 
+      id:3, name:"Royal Meridian", location:"London, UK", pricePerNight:212, rating:4.7,
+      imageUrl:"https://th.bing.com/th?q=Royal+Standard+Room&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&mkt=en-XA&cc=EG&setlang=en&adlt=strict&t=1&mw=247",
+      cityMatch:"london" 
+    },
+    {
+       id:4, name:"Sunny Oasis Resort", location:"Dubai, UAE", pricePerNight:259, rating:4.9,
+      imageUrl:"https://th.bing.com/th?id=OIF.ySDwtw%2b5xQLSA%2fKS3%2fEEXQ&w=291&h=194&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      cityMatch:"dubai"
+     },
+    { 
+      id:5, name:"Alpine Retreat Inn", location:"Zurich, Switzerland", pricePerNight:275, rating:4.8,
+      imageUrl:"https://th.bing.com/th/id/OIP.8wanXJH3xJUL_WBL_s5z6gHaE8?w=273&h=182&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      cityMatch:"zurich"
+   },
+    {
+       id:6,
+      name:"Metropolitan Central",
+      location:"New York, USA",
+      pricePerNight:310,
+      rating:4.5,
+      imageUrl:"https://th.bing.com/th/id/OIP.crSy0F1OiZvJRIZjrehkyQHaEt?w=201&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3",
+      cityMatch:"new york" 
+    }
+  ];
+
+  let currentHotelForBooking = null;
+
+  function filterHotels(dest) {
+    if (!dest || !dest.trim()) return [...hotelsDatabase];
+    const q = dest.trim().toLowerCase();
+    return hotelsDatabase.filter(h =>
+      h.cityMatch.includes(q) ||
+      h.location.toLowerCase().includes(q) ||
+      h.name.toLowerCase().includes(q)
+    );
+  }
+
+  function renderHotels(hotelsArray, searchTerm) {
+    const container = document.getElementById('hotelsContainer');
+    const subtitle = document.getElementById('resultSubtitle');
+
+    if (!hotelsArray.length) {
+      container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
+        No hotels found for "<strong>${searchTerm}</strong>". Try another destination.
+      </div>`;
+      subtitle.innerText = `No exact matches for "${searchTerm}"`;
+      return;
+    }
+
+    subtitle.innerText = searchTerm
+      ? `✨ ${hotelsArray.length} hotel${hotelsArray.length > 1 ? 's' : ''} found for "${searchTerm}"`
+      : 'Discover top-rated stays matching your style';
+
+    container.innerHTML = hotelsArray.map(hotel => `
+      <div class="hotel-card">
+        <div class="hotel-img" style="background-image: url('${hotel.imageUrl}');">
+          <div class="hotel-badge"> ${hotel.rating}</div>
+        </div>
+        <div class="hotel-info">
+          <div class="hotel-name">${hotel.name}
+            <span class="hotel-price">$${hotel.pricePerNight}<small style="font-size:0.65rem;font-weight:500;color:var(--muted)">/night</small></span>
+          </div>
+          <div class="hotel-location"> ${hotel.location}</div>
+          <div class="rating">${hotel.rating} ★ Superb</div>
+          <button class="book-now-btn" data-hotel='${JSON.stringify(hotel).replace(/'/g,"&apos;")}'>Book Now →</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.book-now-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        openModal(JSON.parse(btn.getAttribute('data-hotel').replace(/&apos;/g,"'")));
+      });
+    });
+  }
+
+  function performSearch() {
+    const dest = document.getElementById('destination').value.trim();
+    renderHotels(filterHotels(dest), dest);
+  }
+
+  // Allow Enter key
+  document.getElementById('destination').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') performSearch();
+  });
+
+  function openModal(hotel) {
+    currentHotelForBooking = hotel;
+    document.getElementById('modalHotelName').innerText = hotel.name;
+    document.getElementById('modalMessage').innerHTML =
+      `Confirm reservation at <strong>${hotel.name}</strong><br>for ${document.getElementById('guests').value}?`;
+    document.getElementById('bookingModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('confirmBooking').addEventListener('click', () => {
+    if (currentHotelForBooking) {
+      const guests = document.getElementById('guests').value;
+      const ci = document.getElementById('checkin').value;
+      const co = document.getElementById('checkout').value;
+      const nights = nightsBetween(ci, co);
+      alert(`✅ BOOKING CONFIRMED!\n\n${currentHotelForBooking.name}\n📍 ${currentHotelForBooking.location}\n👥 ${guests}\n📅 ${ci} → ${co}\n💰 Total: $${currentHotelForBooking.pricePerNight * nights}\n\n✉️ A confirmation email has been sent.`);
+    }
+    closeModal();
+  });
+
+  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+
+  window.addEventListener('click', e => {
+    if (e.target === document.getElementById('bookingModal')) closeModal();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  function closeModal() {
+    document.getElementById('bookingModal').classList.remove('active');
+    document.body.style.overflow = '';
+    currentHotelForBooking = null;
+  }
+
+  function nightsBetween(a, b) {
+    if (!a || !b) return 2;
+    const d = Math.ceil((new Date(b) - new Date(a)) / 86400000);
+    return d > 0 ? d : 2;
+  }
+
+  // Init dates
+  const today = new Date();
+  const fmt = d => d.toISOString().split('T')[0];
+  const t1 = new Date(today); t1.setDate(today.getDate() + 1);
+  const t2 = new Date(today); t2.setDate(today.getDate() + 3);
+  document.getElementById('checkin').value = fmt(t1);
+  document.getElementById('checkout').value = fmt(t2);
+  document.querySelectorAll('input[type="date"]').forEach(i => i.min = fmt(today));
+
+  // Read dest param from URL (passed from home search)
+  const params = new URLSearchParams(window.location.search);
+  const urlDest = params.get('dest') || '';
+  if (urlDest) document.getElementById('destination').value = urlDest;
+  renderHotels(filterHotels(urlDest), urlDest);
+</script>
+</body>
+</html>
